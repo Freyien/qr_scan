@@ -45,18 +45,19 @@ class _HomePageState extends State<HomePage> {
   _scanQR() async{
     //https://google.com
     //geo:19.546215591946453,-99.21018352317792
+
     String futureString = '';
 
-    try {
-      futureString = await BarcodeScanner.scan();
-    } catch (e) {
-      futureString = e.toString();
-    }
+    // try {
+    //   futureString = await BarcodeScanner.scan();
+    // } catch (e) {
+    //   futureString = e.toString();
+    // }
 
-    print('Future String: $futureString');
+    // print('Future String: $futureString');
 
-    if (futureString != null)
-      print('Tenemos info');
+    // if (futureString != null)
+    //   print('Tenemos info');
   }
 
   Widget _callPage(int currentIndex) {
