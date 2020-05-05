@@ -34,7 +34,6 @@ class _HomePageState extends State<HomePage> {
 
   Widget _appBar() {
     return AppBar(
-      centerTitle: true,
       title: Text('QR Scanner'),
       actions: <Widget>[
         IconButton(
@@ -103,8 +102,8 @@ class _HomePageState extends State<HomePage> {
         ),
 
         BottomNavigationBarItem(
-          icon: Icon(Icons.brightness_5),
-          title: Text('Direcciones')
+          icon: Icon(Icons.code),
+          title: Text('Páginas web')
         )
       ]
     );
