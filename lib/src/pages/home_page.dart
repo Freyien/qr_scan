@@ -1,9 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 import 'package:barcode_scan/barcode_scan.dart';
 
 import 'package:qr_scan/src/pages/directions_page.dart';
 import 'package:qr_scan/src/pages/maps_page.dart';
+import 'package:qr_scan/src/utils/utils.dart' as utils;
+
+import 'package:qr_scan/src/bloc/scan_bloc.dart';
+import 'package:qr_scan/src/models/scan_model.dart';
+
 
 class HomePage extends StatefulWidget {
   @override
@@ -11,6 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final scanBloc = new ScanBloc();
   int currentIndex = 0;
 
   @override
@@ -29,7 +37,10 @@ class _HomePageState extends State<HomePage> {
       centerTitle: true,
       title: Text('QR Scanner'),
       actions: <Widget>[
-        IconButton(icon: Icon(Icons.delete_forever), onPressed: (){})
+        IconButton(
+          icon: Icon(Icons.delete_forever), 
+          onPressed: scanBloc.deleteAllScans
+        )
       ],
     );
   }
@@ -38,26 +49,35 @@ class _HomePageState extends State<HomePage> {
     return FloatingActionButton(
       child: Icon(Icons.filter_center_focus),
       backgroundColor: Theme.of(context).primaryColor,
-      onPressed: _scanQR
+      onPressed: () => _scanQR(context)
     );
   }
 
-  _scanQR() async{
+  _scanQR(BuildContext context) async {
     //https://google.com
     //geo:19.546215591946453,-99.21018352317792
 
-    String futureString = '';
+    String futureString;
 
-    // try {
-    //   futureString = await BarcodeScanner.scan();
-    // } catch (e) {
-    //   futureString = e.toString();
-    // }
+    try {
+      futureString = await BarcodeScanner.scan();
+    } catch (e) {
+      futureString = e.toString();
+    }
 
-    // print('Future String: $futureString');
+    if (futureString != null){
+      final scanModel = ScanModel(value: futureString);
+      scanBloc.addScan(scanModel);
 
-    // if (futureString != null)
-    //   print('Tenemos info');
+      if ( Platform.isIOS ) {
+        Future.delayed(Duration(milliseconds: 750), () {
+          utils.openScan(context, scanModel);    
+        });
+      } else {
+        utils.openScan(context, scanModel);
+      }
+
+    }
   }
 
   Widget _callPage(int currentIndex) {
